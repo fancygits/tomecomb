@@ -1,6 +1,12 @@
-<mat-toolbar></mat-toolbar>
-<mat-toolbar color="primary">
-  <span>{{ title }}</span>
-</mat-toolbar>
+<div class="container">
+  <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
+  <form class="search-form"> 
+    <mat-form-field class="searchbar">
+      <input matInput #search placeholder="Search a book...">
+      <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
+    </mat-form-field>
+  </form>
+</div>
+
 
 <router-outlet></router-outlet>

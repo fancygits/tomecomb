@@ -1,0 +1,18 @@
+.container {
+  width: 100%;
+  text-align: center;
+}
+
+.search-form {
+  min-height: 400px;
+  min-width: 200px;
+  width: 100%;
+}
+
+.searchbar {
+  width: 500px;
+}
+
+.logo {
+  padding: 20px;
+}
