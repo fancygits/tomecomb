@@ -2,11 +2,14 @@
   <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
   <form class="search-form"> 
     <mat-form-field class="searchbar">
-      <input matInput #search placeholder="Search a book...">
+      <input matInput name="searchterm" [(ngModel)]="searchterm" placeholder="Search a book...">
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
+    <button type="submit" mat-flat-button color="primary" (click)="searchBooks(searchterm)">Search</button>
   </form>
 </div>
-
+{{searchterm}}
+<p *ngIf="books.length == 0">Searching...</p>
+<p *ngIf="books.length > 0">{{books}}</p>
 
 <router-outlet></router-outlet>
