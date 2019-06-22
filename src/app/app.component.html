@@ -1,15 +1,15 @@
 <div class="container">
   <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
-  <form class="search-form"> 
+  <form #searchForm="ngForm" (ngSubmit)="searchBooks()" class="search-form"> 
     <mat-form-field class="searchbar">
-      <input matInput name="searchterm" [(ngModel)]="searchterm" placeholder="Search a book...">
+      <input matInput type="text" name="searchterm" [(ngModel)]="searchterm" placeholder="Search a book...">
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
-    <button type="submit" mat-flat-button color="primary" (click)="searchBooks(searchterm)">Search</button>
+    <button type="submit" mat-flat-button color="primary" value="Search">Search</button>
   </form>
+  <p *ngIf="books.length == 0">Searching...</p>
 </div>
-{{searchterm}}
-<p *ngIf="books.length == 0">Searching...</p>
-<p *ngIf="books.length > 0">{{books}}</p>
 
+<p *ngIf="books.length > 0">{{books}}</p>
+{{ books | json }}
 <router-outlet></router-outlet>

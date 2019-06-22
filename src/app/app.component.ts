@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 export class AppComponent {
   title = 'Tome Comb';
   books: any = {};
+  searchterm: string = '';
   private apiKey: string;
   private apiUrl: string;
 
@@ -18,7 +19,8 @@ export class AppComponent {
     this.apiUrl = 'https://www.googleapis.com/books/v1/volumes';
   }
 
-  searchBooks(searchterm: string) {
-    this.books = this.http.get(this.apiUrl + '?q=' + searchterm + '&key=' + this.apiKey);
+  searchBooks() {
+    this.books = this.http.get(this.apiUrl + '?q=' + this.searchterm + '&key=' + this.apiKey);
+    console.log(this.searchterm + " was the searchterm");
   }
 }
