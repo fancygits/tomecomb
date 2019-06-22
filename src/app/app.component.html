@@ -7,9 +7,13 @@
     </mat-form-field>
     <button type="submit" mat-flat-button color="primary" value="Search">Search</button>
   </form>
-  <p *ngIf="books.length == 0">Searching...</p>
+  <p *ngIf="(books | json) == '{}'">Searching...</p>
 </div>
 
-<p *ngIf="books.length > 0">{{books}}</p>
-{{ books | json }}
+<p *ngIf="(books | json) != '{}'">Books Length: {{ books['items'].length }} </p>
+<ul *ngIf="(books | json) != '{}'">
+  <li *ngFor="let book of books['items']">
+    {{ book.volumeInfo.title }} - {{ book.volumeInfo.authors[0] }}
+  </li>
+</ul>
 <router-outlet></router-outlet>
