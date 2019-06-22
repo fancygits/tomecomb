@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { BooksService } from './books/books.service';
 
 @Component({
   selector: 'app-root',
@@ -10,17 +9,16 @@ import { map } from 'rxjs/operators';
 export class AppComponent {
   title = 'Tome Comb';
   books: any = {};
-  searchterm: string = '';
-  private apiKey: string;
-  private apiUrl: string;
+  searchterm = '';
+  page = 0;
 
-  constructor(private http: HttpClient) {
-    this.apiKey = '***REMOVED***';
-    this.apiUrl = 'https://www.googleapis.com/books/v1/volumes';
-  }
+  constructor(private booksService: BooksService) {}
 
   searchBooks() {
-    this.books = this.http.get(this.apiUrl + '?q=' + this.searchterm + '&key=' + this.apiKey);
-    console.log(this.searchterm + " was the searchterm");
+    this.booksService.getBookList(this.searchterm, this.page).subscribe(
+      data => { this.books = data; },
+      err => console.error(err),
+      () => console.log('finished getting books with the keyword ' + this.searchterm)
+    );
   }
 }
