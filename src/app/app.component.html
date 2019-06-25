@@ -1,13 +1,14 @@
-<div class="container">
-  <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
+<div class="container" fxLayout="column" fxFlexFill>
+  
   <form (ngSubmit)="hiddenSearch()">
+    <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
     <mat-form-field class="searchbar">
       <input matInput type="text" name="searchterm" placeholder="Search a book..." autocomplete="off" #bookSearchbar>
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
     <button hidden type="submit">Hidden Search Button</button>
   </form>
-  
+
   <div class="loading" *ngIf="isSearching">
     <mat-spinner color="primary">Searching...</mat-spinner>
   </div>
@@ -38,5 +39,20 @@
 
       </mat-card>
     </div>
+
+    <div>
+      <mat-paginator #paginator 
+        [showFirstLastButtons]="false" 
+        [length]="totalItems" 
+        [pageIndex]="currentPage"
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="[12, 24, 36]" 
+        (page)="pageEvent = handlePage($event)"
+        *ngIf="apiResponse['totalItems']">
+      </mat-paginator>
+    </div>
   </ng-template>
+  <footer  fxFlexOffset="auto">
+    <small>Created for 8th Light by James Luke Johnson</small>
+  </footer>
 </div>
