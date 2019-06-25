@@ -1,42 +1,55 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed, ComponentFixture, async } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 import { AppComponent } from './app.component';
+import { BooksService } from './books/books.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
-import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { MOCKBOOK } from './books/book.mock';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
-  let component: AppComponent;
-  let compiled: DebugElement['nativeElement'];
+  let debugElement: DebugElement;
+  let booksService: BooksService;
+  let booksSpy;
+  let mockBook = MOCKBOOK;
 
   beforeEach(async(() => {
+    // refine the test module by declaring the test component
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        MaterialModule
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [BrowserAnimationsModule, MaterialModule, HttpClientTestingModule],
+      declarations: [AppComponent],
+      providers: [BooksService]
     }).compileComponents();
+
+    // create component and test fixture
+    fixture = TestBed.createComponent(AppComponent);
+    debugElement = fixture.debugElement;
+
+    // BooksService provided by Component
+    booksService = debugElement.injector.get(BooksService);
+    booksSpy = spyOn(booksService, 'search').and.returnValue(mockBook);
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AppComponent);
-    component = fixture.debugElement.componentInstance;
-    compiled = fixture.debugElement.nativeElement;
+  it('should get book results', () => {
     fixture.detectChanges();
+    let inst = fixture.componentInstance;
+    inst.bookSearchbar.nativeElement.value = 'harry potter';
+    fixture.whenStable().then(() => {
+      inst.hiddenSearch();
+      expect(booksSpy).toHaveBeenCalled();
+      expect(fixture.componentInstance.apiResponse).toContain('volumeInfo');
+    });
   });
 
   it('should create the app', () => {
-    expect(component).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
   it(`should have as title 'Tome Comb'`, () => {
-    expect(component.title).toEqual('Tome Comb');
+    expect(fixture.componentInstance.title).toEqual('Tome Comb');
   });
 
   it('should have an image tag with the title in an alt attribute', () => {
