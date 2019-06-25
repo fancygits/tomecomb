@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class BooksService {
@@ -8,9 +8,19 @@ export class BooksService {
 
   constructor(private http: HttpClient) { }
 
-  getBookList(searchterm: string, index: number) {
-    const query = this.apiUrl + '?q=' + searchterm + '&printType=books&maxResults=10&startIndex=' + index + '&key=' + this.apiKey;
-    return this.http.get(query);
+  search(params: HttpParams) {
+    params = params.append('key', this.apiKey);
+    return this.http.request('GET', this.apiUrl, {responseType: 'json', params });
   }
+
+  // makeBook(): Promise<Book[]> {
+  //   return this.http.get<Book>(this.apiUrl, { params })
+  //     .map(response => {
+  //       const array = JSON.parse(response.json()) as any[];
+  //       const book = array.map(data => new Book(data));
+  //       return book;
+  //     })
+  //     .toPromise();
+  // }
 
 }

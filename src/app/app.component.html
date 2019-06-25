@@ -1,19 +1,60 @@
-<div class="container">
-  <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
-  <form #searchForm="ngForm" (ngSubmit)="searchBooks()" class="search-form"> 
-    <mat-form-field class="searchbar">
-      <input matInput type="text" name="searchterm" [(ngModel)]="searchterm" placeholder="Search a book...">
+<div class="container main-content" fxLayoutAlign="start stretch" fxLayout="column">
+  
+  <form (ngSubmit)="hiddenSearch()">
+    <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
+    <mat-form-field class="searchbar" fxFill>
+      <input matInput type="text" name="searchterm" placeholder="Search a book..." autocomplete="off" #bookSearchbar>
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
-    <button type="submit" mat-flat-button color="primary" value="Search">Search</button>
+    <button hidden type="submit">Hidden Search Button</button>
   </form>
-  <p *ngIf="(books | json) == '{}'">Searching...</p>
-</div>
 
-<p *ngIf="(books | json) != '{}'">Books Length: {{ books['items'].length }} </p>
-<ul *ngIf="(books | json) != '{}'">
-  <li *ngFor="let book of books['items']">
-    {{ book.volumeInfo.title }} - {{ book.volumeInfo.authors[0] }}
-  </li>
-</ul>
-<router-outlet></router-outlet>
+  <div class="loading" *ngIf="isSearching">
+    <mat-spinner color="primary">Searching...</mat-spinner>
+  </div>
+
+  <ng-container *ngIf="apiResponse['items'] == 'False'; else elseTemplate">
+    <h1>{{ apiResponse.error.errors.message }}</h1>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div class="container" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="3%" fxLayoutAlign="space-evenly stretch" >
+      <mat-card *ngFor="let book of apiResponse['items']" fxLayout="column" fxFlex="30%" fxFlex.sm="45%" fxFlex.xs="100%">
+
+        <mat-card-header>
+          <img mat-card-avatar src="{{ book.volumeInfo.imageLinks.smallThumbnail }}" alt="cover" *ngIf="book.volumeInfo.imageLinks">
+          <mat-card-title matTooltip="{{ book.volumeInfo.subtitle }}" >
+            {{ book.volumeInfo.title }}
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="book.volumeInfo.authors">{{ book.volumeInfo.authors[0] }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start none">
+          <div [innerHTML]="book.searchInfo.textSnippet" *ngIf="book.searchInfo"></div>
+        </mat-card-content>
+
+        <mat-card-actions fxFlexOffset="auto">
+          <p>Published by {{ book.volumeInfo.publisher }}</p>
+          <a mat-flat-button color="accent" href="{{book.volumeInfo.previewLink}}" target="_blank">Check it out!</a>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
+
+    <div>
+      <mat-paginator #paginator 
+        [showFirstLastButtons]="false" 
+        [length]="totalItems" 
+        [pageIndex]="currentPage"
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="[12, 24, 36]" 
+        (page)="pageEvent = handlePage($event)"
+        *ngIf="apiResponse['totalItems']">
+      </mat-paginator>
+    </div>
+  </ng-template>
+  <span fxFlex fxFlexFill></span>
+  <footer fxLayout="column" fxLayoutAlign="end center">
+    <p mat-typography>Created for 8th Light by James Luke Johnson</p>
+  </footer>
+</div>
