@@ -1,6 +1,7 @@
 .container {
   width: 100%;
   text-align: center;
+  padding: 30px;
 }
 
 .search-form {
@@ -15,4 +16,20 @@
 
 .logo {
   padding: 20px;
+}
+
+.loading {
+  width: 100px;
+  margin: 50px auto;
+}
+
+.mat-card {
+  border: 3px #ff9800 solid;
+  margin-bottom: 50px;
+}
+
+.mat-card-avatar {
+  height: 100px;
+  width: 100px;
+  margin-bottom: 20px;
 }
