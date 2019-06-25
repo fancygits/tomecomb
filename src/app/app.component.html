@@ -1,8 +1,8 @@
-<div class="container" fxLayout="column" fxFlexFill>
+<div class="container main-content" fxLayoutAlign="start stretch" fxLayout="column">
   
   <form (ngSubmit)="hiddenSearch()">
     <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
-    <mat-form-field class="searchbar">
+    <mat-form-field class="searchbar" fxFill>
       <input matInput type="text" name="searchterm" placeholder="Search a book..." autocomplete="off" #bookSearchbar>
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
@@ -14,12 +14,12 @@
   </div>
 
   <ng-container *ngIf="apiResponse['items'] == 'False'; else elseTemplate">
-    {{ apiResponse.error.errors.message }}
+    <h1>{{ apiResponse.error.errors.message }}</h1>
   </ng-container>
 
   <ng-template #elseTemplate>
-    <div class="container" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="3%" fxLayoutAlign="space-evenly stretch">
-      <mat-card *ngFor="let book of apiResponse['items']" fxLayout="column" fxFlex="30%" fxFlex.sm="45%" fxFlex.xs="90%">
+    <div class="container" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="3%" fxLayoutAlign="space-evenly stretch" >
+      <mat-card *ngFor="let book of apiResponse['items']" fxLayout="column" fxFlex="30%" fxFlex.sm="45%" fxFlex.xs="100%">
 
         <mat-card-header>
           <img mat-card-avatar src="{{ book.volumeInfo.imageLinks.smallThumbnail }}" alt="cover" *ngIf="book.volumeInfo.imageLinks">
@@ -34,6 +34,7 @@
         </mat-card-content>
 
         <mat-card-actions fxFlexOffset="auto">
+          <p>Published by {{ book.volumeInfo.publisher }}</p>
           <a mat-flat-button color="accent" href="{{book.volumeInfo.previewLink}}" target="_blank">Check it out!</a>
         </mat-card-actions>
 
@@ -52,7 +53,8 @@
       </mat-paginator>
     </div>
   </ng-template>
-  <footer  fxFlexOffset="auto">
-    <small>Created for 8th Light by James Luke Johnson</small>
+  <span fxFlex fxFlexFill></span>
+  <footer fxLayout="column" fxLayoutAlign="end center">
+    <p mat-typography>Created for 8th Light by James Luke Johnson</p>
   </footer>
 </div>
