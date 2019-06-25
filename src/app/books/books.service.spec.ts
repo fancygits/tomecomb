@@ -31,9 +31,9 @@ describe('BooksService', () => {
           expect(result['items'].length).toBe(10);
         });
 
-        const req = httpMock.expectOne(`${service.apiUrl}?q=harry%20potter&key=***REMOVED***`);
+        const req = httpMock.expectOne(`${service.apiUrl}?q=harry%20potter&key=xxxxxxxxxxxxxx`);
         expect(req.request.url).toBe(`${service.apiUrl}`);
-        expect(req.request.params.toString()).toEqual('q=harry%20potter&key=***REMOVED***');
+        expect(req.request.params.toString()).toEqual('q=harry%20potter&key=xxxxxxxxxxxxxx');
     });
   });
 
