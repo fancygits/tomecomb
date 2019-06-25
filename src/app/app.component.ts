@@ -20,10 +20,10 @@ export class AppComponent implements OnInit {
       q: '',
       printType: 'books',
       startIndex: '0',
-      maxResults: '30'
+      maxResults: '12'
     }
   });
-  pageSize = 30;
+  pageSize = 12;
   currentPage = 0;
   totalItems = 0;
   
