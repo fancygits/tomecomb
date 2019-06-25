@@ -7,19 +7,36 @@
     </mat-form-field>
     <button hidden type="submit">Hidden Search Button</button>
   </form>
-  <div *ngIf="isSearching">
-    <h4>Searching...</h4>
+  
+  <div class="loading" *ngIf="isSearching">
+    <mat-spinner color="primary">Searching...</mat-spinner>
   </div>
-  <ng-container *ngIf="apiResponse['Response'] == 'False'; else elseTemplate">
-    {{ apiResponse['Error'] }}
+
+  <ng-container *ngIf="apiResponse['items'] == 'False'; else elseTemplate">
+    {{ apiResponse.error.errors.message }}
   </ng-container>
+
   <ng-template #elseTemplate>
-    <ul >
-      <li *ngFor="let book of apiResponse['items']">
-        {{ book.volumeInfo.title }}<span *ngIf="book.volumeInfo.authors"> - {{ book.volumeInfo.authors[0] }}</span> 
-      </li>
-    </ul>
+    <div class="container" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="3%" fxLayoutAlign="space-evenly stretch">
+      <mat-card *ngFor="let book of apiResponse['items']" fxLayout="column" fxFlex="30%" fxFlex.sm="45%" fxFlex.xs="90%">
+
+        <mat-card-header>
+          <img mat-card-avatar src="{{ book.volumeInfo.imageLinks.smallThumbnail }}" alt="cover" *ngIf="book.volumeInfo.imageLinks">
+          <mat-card-title matTooltip="{{ book.volumeInfo.subtitle }}" >
+            {{ book.volumeInfo.title }}
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="book.volumeInfo.authors">{{ book.volumeInfo.authors[0] }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start none">
+          <div [innerHTML]="book.searchInfo.textSnippet" *ngIf="book.searchInfo"></div>
+        </mat-card-content>
+
+        <mat-card-actions fxFlexOffset="auto">
+          <a mat-flat-button color="accent" href="{{book.volumeInfo.previewLink}}" target="_blank">Check it out!</a>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
   </ng-template>
-  
-  
 </div>
