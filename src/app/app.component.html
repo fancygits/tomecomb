@@ -1,19 +1,25 @@
 <div class="container">
   <img src="/assets/img/tome_comb_logo.svg" alt="Tome Comb" width="300px" class="logo">
-  <form #searchForm="ngForm" (ngSubmit)="searchBooks()" class="search-form"> 
+  <form (ngSubmit)="hiddenSearch()">
     <mat-form-field class="searchbar">
-      <input matInput type="text" name="searchterm" [(ngModel)]="searchterm" placeholder="Search a book...">
+      <input matInput type="text" name="searchterm" placeholder="Search a book..." autocomplete="off" #bookSearchbar>
       <mat-hint align="start">Start typing at least 3 characters.</mat-hint>
     </mat-form-field>
-    <button type="submit" mat-flat-button color="primary" value="Search">Search</button>
+    <button hidden type="submit">Hidden Search Button</button>
   </form>
-  <p *ngIf="(books | json) == '{}'">Searching...</p>
+  <div *ngIf="isSearching">
+    <h4>Searching...</h4>
+  </div>
+  <ng-container *ngIf="apiResponse['Response'] == 'False'; else elseTemplate">
+    {{ apiResponse['Error'] }}
+  </ng-container>
+  <ng-template #elseTemplate>
+    <ul >
+      <li *ngFor="let book of apiResponse['items']">
+        {{ book.volumeInfo.title }}<span *ngIf="book.volumeInfo.authors"> - {{ book.volumeInfo.authors[0] }}</span> 
+      </li>
+    </ul>
+  </ng-template>
+  
+  
 </div>
-
-<p *ngIf="(books | json) != '{}'">Books Length: {{ books['items'].length }} </p>
-<ul *ngIf="(books | json) != '{}'">
-  <li *ngFor="let book of books['items']">
-    {{ book.volumeInfo.title }} - {{ book.volumeInfo.authors[0] }}
-  </li>
-</ul>
-<router-outlet></router-outlet>
