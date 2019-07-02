@@ -2,6 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpParams } from '@angular/common/http';
 import { BooksService } from './books.service';
+import { ApiKeys } from './apikeys';
 
 describe('BooksService', () => {
   let injector: TestBed;
@@ -22,6 +23,11 @@ describe('BooksService', () => {
     httpMock.verify();
   });
 
+  it('should be created', () => {
+    service = TestBed.get(BooksService);
+    expect(service).toBeTruthy();
+  });
+
   describe('#search', () => {
     let dummyParams = new HttpParams().set('q', 'harry potter');
 
@@ -31,14 +37,11 @@ describe('BooksService', () => {
           expect(result['items'].length).toBe(10);
         });
 
-        const req = httpMock.expectOne(`${service.apiUrl}?q=harry%20potter&key=xxxxxxxxxxxxxx`);
+        const req = httpMock.expectOne(`${service.apiUrl}?q=harry%20potter&key=${ApiKeys.apiKey}`, 'call to api');
+        expect(req.request.method).toBe('GET');
         expect(req.request.url).toBe(`${service.apiUrl}`);
-        expect(req.request.params.toString()).toEqual('q=harry%20potter&key=xxxxxxxxxxxxxx');
+        expect(req.request.params.toString()).toEqual('q=harry%20potter&key=' + ApiKeys.apiKey);
     });
   });
 
-  it('should be created', () => {
-    service = TestBed.get(BooksService);
-    expect(service).toBeTruthy();
-  });
 });
