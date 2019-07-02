@@ -14,8 +14,10 @@ import { PageEvent } from '@angular/material';
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let de: DebugElement;
+  let component: AppComponent;
   let booksService: BooksService;
   let booksSpy: jasmine.Spy;
+  let searchSpy: jasmine.Spy;
   let mockBook = MOCKBOOK;
 
   beforeEach(async(() => {
@@ -102,6 +104,27 @@ describe('AppComponent', () => {
       fixture.detectChanges();
       expect(paginator.componentInstance.pageIndex).toEqual(2);
       expect(paginator.componentInstance.length).toEqual(2405);
+    });
+
+    it('should reduce the maxResults on the last page', () => {
+      de.componentInstance.apiResponse = {'totalItems': 15 };
+      de.componentInstance.totalItems = 15;
+      fixture.detectChanges();
+      let paginator = de.query(By.css('mat-paginator'));
+      expect(paginator).toBeTruthy();
+      expect(paginator.componentInstance.length).toEqual(15);
+      expect(paginator.componentInstance.pageIndex).toEqual(0);
+      expect(paginator.componentInstance.pageSize).toEqual(12);
+      let nextButton = de.query(By.css('button.mat-paginator-navigation-next'));
+      expect(nextButton.nativeElement).toBeTruthy();
+      
+      nextButton.nativeElement.click();
+      
+      de.componentInstance.apiResponse = {'totalItems': 15 };
+      fixture.detectChanges();
+      expect(paginator.componentInstance.pageIndex).toEqual(1);
+      expect(paginator.componentInstance.length).toEqual(15);
+
     });
 
   });
