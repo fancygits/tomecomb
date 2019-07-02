@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { of, fromEvent } from 'rxjs';
+import { of, fromEvent, Observable } from 'rxjs';
 import { BooksService } from './books/books.service';
 import { HttpParams } from '@angular/common/http';
-import { debounceTime, map, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material';
 
 @Component({
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   pageSize = 12;
   currentPage = 0;
   totalItems = 0;
-  
+
   @ViewChild('bookSearchbar') bookSearchbar: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -41,16 +41,16 @@ export class AppComponent implements OnInit {
       map((event: any) => {
         return event.target.value;
       })
-      ,filter(res => res.length > 2)  // if character length is greater than 2
-      ,debounceTime(1000)             // Time in milliseconds between key event
-      ,distinctUntilChanged()         // If previous query is different from current
+      , filter(res => res.length > 2)  // if character length is greater than 2
+      , debounceTime(1000)             // Time in milliseconds between key event
+      , distinctUntilChanged()         // If previous query is different from current
     ).subscribe((text: string) => {   // subscription for response
       this.currentPage = 0;
       this.search(text);
     });
   }
 
-  private searchGetCall(term: string) {
+  private searchGetCall(term: string): Observable<any> {
     if (term === '') {
       return of([]);
     }
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
   private search(term: string) {
     this.isSearching = true;
     this.searchGetCall(term).subscribe((res) => {
-      console.log('API Result', res);
+      // console.log('API Result', res);
       this.isSearching = false;
       this.apiResponse = res;
       if (this.params.get('startIndex') == '0') {
@@ -79,6 +79,7 @@ export class AppComponent implements OnInit {
   }
 
   public handlePage(e: any) {
+    // console.log(e);
     this.currentPage = e.pageIndex;
     this.pageSize = e.pageSize;
     this.updatePage();
