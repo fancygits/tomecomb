@@ -10,7 +10,7 @@ export class BooksService {
    }
 
   search(params: HttpParams) {
-    params = params.append('key', ApiKeys.apiKey);
+    // params = params.append('key', ApiKeys.apiKey);
     return this.http.request('GET', this.apiUrl, {responseType: 'json', params });
   }
 }
